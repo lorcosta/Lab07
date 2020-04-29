@@ -4,9 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import it.polito.tdp.poweroutages.model.Nerc;
 import it.polito.tdp.poweroutages.model.PowerOutages;
@@ -37,19 +39,22 @@ public class PowerOutageDAO {
 		return nercList;
 	}
 	
-	public List<PowerOutages> getPowerOutages(LocalDateTime massimaDurataOutage){
-		String sql="SELECT id, nerc_id,customers_affected,"
+	public List<PowerOutages> getPowerOutages(Time massimaDurataOutage, Nerc n, Map<Integer,Nerc> mapNerc){
+		String sql="SELECT id,nerc_id,customers_affected,"
 				+ " TIMEDIFF(date_event_finished,date_event_began) as 'Tempo outage'" + 
 				"FROM PowerOutages" + 
-				"WHERE TIMEDIFF(date_event_finished,date_event_began)< '46:00:00' AND nerc_id=1";//TODO inserisci i ? per mettere i parametri di selezione che sono definiti dall'utente
+				"WHERE TIMEDIFF(date_event_finished,date_event_began)<? AND nerc_id=?";
 		List<PowerOutages> po= new ArrayList<PowerOutages>();
 		try {
 			Connection conn = ConnectDB.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);
+			st.setTime(1, massimaDurataOutage);
+			st.setInt(2, n.getId());
+			
 			ResultSet res = st.executeQuery();
-
 			while (res.next()) {
-				PowerOutages singlePO=new PowerOutages();
+				PowerOutages singlePO=new PowerOutages(res.getInt("id"),mapNerc.get(res.getInt("nerc_id")),res.getInt("customers_affected"),res.getTime("Tempo_outage").toLocalTime());
+				po.add(singlePO);
 			}
 
 			conn.close();

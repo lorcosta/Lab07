@@ -1,6 +1,8 @@
 package it.polito.tdp.poweroutages;
 
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -38,10 +40,31 @@ public class FXMLController {
 
     @FXML
     void AnalyseWorstCase(ActionEvent event) {
-
+    	txtResult.clear();
+    	Nerc n=this.listaNERC.getValue();
+    	String maxOreOutage=this.txtHours.getText();
+    	String maxAnniTotali=this.txtYears.getText();
+    	Integer numeroOre=0;
+    	Integer maxAnni=0;
+    	try {
+    		numeroOre=Integer.parseInt(maxOreOutage);
+    		maxAnni=Integer.parseInt(maxAnniTotali);
+    	}catch(NumberFormatException nfe) {
+    		nfe.printStackTrace();
+    		throw new NumberFormatException();
+    	}
+    	LocalTime maxOre=LocalTime.of(numeroOre,0);
+    	if(n==null) {
+    		txtResult.setText("Selezionare NERC!");
+    		return;
+    	}
+    	model.analyseWorstCase(maxOre,n,maxAnni);
     }
     void loadData() {
     	List<Nerc> NERC=model.getNercList();
+    	for(Nerc n:NERC) {
+    		model.mapNerc.put(n.getId(),n);
+    	}
     	this.listaNERC.getItems().addAll(NERC);
     }
     @FXML // This method is called by the FXMLLoader when initialization is complete
