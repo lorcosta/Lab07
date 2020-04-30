@@ -1,13 +1,12 @@
 package it.polito.tdp.poweroutages;
 
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import it.polito.tdp.poweroutages.model.Model;
 import it.polito.tdp.poweroutages.model.Nerc;
+import it.polito.tdp.poweroutages.model.PowerOutage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -25,7 +24,7 @@ public class FXMLController {
 
     @FXML // fx:id="listaNERC"
     private ChoiceBox<Nerc> listaNERC; // Value injected by FXMLLoader
-//TODO inseeire tipologia di dati per riempimento choiceBox
+
     @FXML // fx:id="txtYears"
     private TextField txtYears; // Value injected by FXMLLoader
 
@@ -58,7 +57,11 @@ public class FXMLController {
     		txtResult.setText("Selezionare NERC!");
     		return;
     	}
-    	model.analyseWorstCase(maxOre,n,maxAnni);
+    	List<PowerOutage> risultato=model.analyseWorstCase(maxOre,n,maxAnni);
+    	for(PowerOutage po:risultato) {
+    		txtResult.appendText(po.toString());
+    	}
+    	
     }
     void loadData() {
     	List<Nerc> NERC=model.getNercList();

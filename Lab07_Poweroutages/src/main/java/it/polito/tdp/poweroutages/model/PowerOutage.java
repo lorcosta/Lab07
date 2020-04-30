@@ -1,27 +1,29 @@
 package it.polito.tdp.poweroutages.model;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.Duration;
+import java.time.LocalDate;
 
-public class PowerOutages {
+public class PowerOutage {
 	private Integer id;
 	private Nerc nerc;
 	private Integer customersAffected;
-	private LocalTime durationOutage;
+	private Duration durationOutage;
+	private LocalDate dateEventFinished;
 	/**
-	 * Costruisce un oggetto di tipo {@link PowerOutages}
+	 * Costruisce un oggetto di tipo {@link PowerOutage}
 	 * @param id
 	 * @param nercId
 	 * @param customersAffected
 	 * @param durationOutage
 	 */
-	public PowerOutages(Integer id, Nerc nerc, Integer customersAffected,
-			LocalTime durationOutage) {
+	public PowerOutage(Integer id, Nerc nerc, Integer customersAffected,
+			Duration durationOutage, LocalDate dateEventFinished) {
 		super();
 		this.id = id;
 		this.nerc = nerc;
 		this.customersAffected = customersAffected;
 		this.durationOutage = durationOutage;
+		this.dateEventFinished=dateEventFinished;
 	}
 	public Integer getId() {
 		return id;
@@ -41,11 +43,24 @@ public class PowerOutages {
 	public void setCustomersAffected(Integer customersAffected) {
 		this.customersAffected = customersAffected;
 	}
-	public LocalTime getDurationOutage() {
+	public Duration getDurationOutage() {
 		return durationOutage;
 	}
-	public void setDurationOutage(LocalTime durationOutage) {
+	public void setDurationOutage(Duration durationOutage) {
 		this.durationOutage = durationOutage;
+	}
+	
+	public Nerc getNerc() {
+		return nerc;
+	}
+	public void setNerc(Nerc nerc) {
+		this.nerc = nerc;
+	}
+	public LocalDate getDateEventFinished() {
+		return dateEventFinished;
+	}
+	public void setDateEventFinished(LocalDate dateEventFinished) {
+		this.dateEventFinished = dateEventFinished;
 	}
 	@Override
 	public int hashCode() {
@@ -62,13 +77,17 @@ public class PowerOutages {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		PowerOutages other = (PowerOutages) obj;
+		PowerOutage other = (PowerOutage) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	@Override
+	public String toString() {
+		return id+" "+customersAffected+" "+dateEventFinished.toString();
 	}
 	
 	

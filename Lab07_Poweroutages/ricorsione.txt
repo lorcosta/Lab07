@@ -1,0 +1,30 @@
+Problema:
+	dati in input:
+	-numero massimo anni tra evento più recente e evento più vecchio
+	-lista dei powerOutage
+
+Soluzione parziale:(da cosa è composta)
+	-sottoinsieme di powerOutage
+	-numero di personeAffected
+
+Soluzione totale:
+	-sotoinsieme di powerOutage di x anni massimi
+	-numero totale di personeAffected dai powerOutages
+
+Livello:(cos'è)
+	-numero intero che rappresenta la differenza tra l'anno più vecchio e l'anno più recente
+
+Condizione di terminazione:
+	-se livello==numeroMassimoAnni
+	-se personeAffected è max possibile
+
+Generazione delle soluzioni:
+	-Aggiungere a parziale un powerOutage solo se la differenza tra gli anni è <=numeroMassimoAnni
+
+Avvio della ricorsione:
+	-soluzione parziale vuota
+	-livello=0
+	
+Strutture dati:
+	-List<PowerOutage> che rappresenta le soluzioni parziale e totale
+	-Integer per le personeAffected
