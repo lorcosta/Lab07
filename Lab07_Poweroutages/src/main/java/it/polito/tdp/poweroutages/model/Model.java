@@ -50,9 +50,10 @@ public class Model {
 		if(peopleAffected(parziale)>maxAffected && totHoursOutage(parziale).isBefore(maxOre)) {
 			maxAffected=peopleAffected(parziale);
 			soluzione=new LinkedList<PowerOutage>(parziale);
+			System.out.println(soluzione);
 		}
 		for(PowerOutage p:po) {
-			if(!po.contains(p)) {
+			if(!parziale.contains(p)) {
 				parziale.add(p);
 				if(totHoursOutage(parziale).isBefore(maxOre) && checkAnni(parziale,maxAnni)) {
 					analysisWorstCase(parziale);
@@ -68,6 +69,7 @@ public class Model {
 	 * @return true se la soluzione parziale rispetta il vincolo sugli anni, false altrimenti
 	 */
 	private boolean checkAnni(List<PowerOutage> parziale, Integer maxAnni) {
+		//TODO controllo non corretto, quando parziale contiene un solo elemento non restituisce il valore corretto
 		LocalDate annoAlto=LocalDate.of(0, 1, 1);
 		LocalDate annoBasso=LocalDate.of(0, 1, 1);
 		for(PowerOutage p:parziale) {

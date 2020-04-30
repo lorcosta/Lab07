@@ -52,12 +52,16 @@ public class FXMLController {
     		nfe.printStackTrace();
     		throw new NumberFormatException();
     	}
-    	LocalTime maxOre=LocalTime.of(numeroOre,0);
+    	LocalTime maxOre=LocalTime.of(numeroOre,0);//TODO cambiare tipologia di dato, serve un duration altirmenti non si possono mettere ore maggiori di 24
     	if(n==null) {
     		txtResult.setText("Selezionare NERC!");
     		return;
     	}
     	List<PowerOutage> risultato=model.analyseWorstCase(maxOre,n,maxAnni);
+    	if(risultato==null) {
+    		txtResult.appendText("Risultato nullo");
+    		return;
+    	}
     	for(PowerOutage po:risultato) {
     		txtResult.appendText(po.toString());
     	}
