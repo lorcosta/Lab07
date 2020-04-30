@@ -13,7 +13,7 @@ public class TestModel {
     	for(Nerc n:NERC) {
     		model.mapNerc.put(n.getId(),n);
     	}
-    	Duration maxOre=Duration.ofHours(35);
+    	Duration maxOre=Duration.ofHours(200);
 		model.analyseWorstCase(maxOre, NERC.get(3), 4);
 	}
 

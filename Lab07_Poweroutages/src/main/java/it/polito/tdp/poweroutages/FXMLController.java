@@ -63,7 +63,8 @@ public class FXMLController {
     		return;
     	}
     	for(PowerOutage po:risultato) {
-    		txtResult.appendText(po.toString());
+    		txtResult.appendText(po.toString()+"\n");
+    		
     	}
     	
     }
