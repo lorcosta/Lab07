@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Duration;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,7 @@ public class PowerOutageDAO {
 		return nercList;
 	}
 	
-	public List<PowerOutage> getPowerOutages(LocalTime massimaDurataOutage, Nerc n, Map<Integer,Nerc> mapNerc){
+	public List<PowerOutage> getPowerOutages(Duration massimaDurataOutage, Nerc n, Map<Integer,Nerc> mapNerc){
 		String sql="SELECT id,nerc_id,customers_affected,date_event_finished,"
 				+ " TIMEDIFF(date_event_finished,date_event_began) as 'Tempo outage'" + 
 				" FROM PowerOutages" + 

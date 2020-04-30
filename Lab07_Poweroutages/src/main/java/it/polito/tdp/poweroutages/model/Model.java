@@ -1,7 +1,7 @@
 package it.polito.tdp.poweroutages.model;
 
+import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,9 +14,10 @@ public class Model {
 	PowerOutageDAO podao;
 	public Map<Integer,Nerc> mapNerc=new HashMap<Integer,Nerc>();
 	Integer maxAffected=0;//numero massimo di persone affette 
+	Duration hoursOutage;//numero totale di ore della soluzione 
 	List<PowerOutage> soluzione;//soluzione della ricorsione
 	List<PowerOutage> po;//lista contenente tutti i powerOutages del NERC selezionato
-	LocalTime maxOre;
+	Duration maxOre;
 	Integer maxAnni;
 	
 	public Model() {
@@ -27,7 +28,7 @@ public class Model {
 		return podao.getNercList();
 	}
 	
-	public List<PowerOutage> analyseWorstCase(LocalTime maxOre, Nerc n, Integer maxAnni) {
+	public List<PowerOutage> analyseWorstCase(Duration maxOre, Nerc n, Integer maxAnni) {
 		// TODO Da qui parte la ricerca ricorsiva della soluzione che chiamerà
 		//la classe Analysis passando i parametri necessari, è possibile richiamare il DAO
 		//in questo punto
@@ -47,15 +48,16 @@ public class Model {
 	 * @input Y è il numero massimo di ore di outage totali
 	 */
 	public void analysisWorstCase(List<PowerOutage> parziale) {
-		if(peopleAffected(parziale)>maxAffected && totHoursOutage(parziale).isBefore(maxOre)) {
+		if(peopleAffected(parziale)>maxAffected && totHoursOutage(parziale).compareTo(maxOre)<0) {
 			maxAffected=peopleAffected(parziale);
+			hoursOutage=totHoursOutage(parziale);
 			soluzione=new LinkedList<PowerOutage>(parziale);
-			System.out.println(soluzione);
-		}
+			System.out.println(soluzione+"maxAffected: "+maxAffected+" HoursOutage: "+String.format("%d:%02d:%02d",hoursOutage.toHours(), hoursOutage.toMinutesPart(), hoursOutage.toSecondsPart()));
+		}//TODO pare che un potenziale problema stia nel fatto che la durata non viene sommata, qualsiasi durata è sempre zero perciò la condizione è sempre soddisfatta
 		for(PowerOutage p:po) {
 			if(!parziale.contains(p)) {
 				parziale.add(p);
-				if(totHoursOutage(parziale).isBefore(maxOre) && checkAnni(parziale,maxAnni)) {
+				if(totHoursOutage(parziale).compareTo(maxOre)<0 && checkAnni(parziale,maxAnni)) {
 					analysisWorstCase(parziale);
 				}
 				parziale.remove(p);
@@ -71,7 +73,7 @@ public class Model {
 	private boolean checkAnni(List<PowerOutage> parziale, Integer maxAnni) {
 		//TODO controllo non corretto, quando parziale contiene un solo elemento non restituisce il valore corretto
 		LocalDate annoAlto=LocalDate.of(0, 1, 1);
-		LocalDate annoBasso=LocalDate.of(0, 1, 1);
+		LocalDate annoBasso=LocalDate.of(3000, 1, 1);
 		for(PowerOutage p:parziale) {
 			if(p.getDateEventFinished().isBefore(annoBasso)) {
 				annoBasso=p.getDateEventFinished();
@@ -88,12 +90,13 @@ public class Model {
 	 * @param po
 	 * @return
 	 */
-	private LocalTime totHoursOutage(List<PowerOutage> parziale) {
-		LocalTime totHours=LocalTime.of(0, 0, 0);
+	private Duration totHoursOutage(List<PowerOutage> parziale) {
+		//Duration totHours=Duration.ZERO;
+		long totHours=0;
 		for(PowerOutage p:parziale) {
-			totHours.plus(p.getDurationOutage());
+			totHours+=p.getDurationOutage().toSeconds();
 		}
-		return totHours;
+		return Duration.ofSeconds(totHours);
 	}
 	/**
 	 * Calcola il numero totale di persone coinvolte da un disservizio

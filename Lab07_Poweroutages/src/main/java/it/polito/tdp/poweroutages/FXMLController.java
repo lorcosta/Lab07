@@ -1,7 +1,7 @@
 package it.polito.tdp.poweroutages;
 
 import java.net.URL;
-import java.time.LocalTime;
+import java.time.Duration;
 import java.util.List;
 import java.util.ResourceBundle;
 import it.polito.tdp.poweroutages.model.Model;
@@ -52,7 +52,7 @@ public class FXMLController {
     		nfe.printStackTrace();
     		throw new NumberFormatException();
     	}
-    	LocalTime maxOre=LocalTime.of(numeroOre,0);//TODO cambiare tipologia di dato, serve un duration altirmenti non si possono mettere ore maggiori di 24
+    	Duration maxOre=Duration.ofHours(numeroOre);
     	if(n==null) {
     		txtResult.setText("Selezionare NERC!");
     		return;

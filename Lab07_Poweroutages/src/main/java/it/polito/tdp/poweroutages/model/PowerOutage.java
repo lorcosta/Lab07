@@ -87,7 +87,7 @@ public class PowerOutage {
 	}
 	@Override
 	public String toString() {
-		return id+" "+customersAffected+" "+dateEventFinished.toString();
+		return id+" "+dateEventFinished.toString();
 	}
 	
 	
