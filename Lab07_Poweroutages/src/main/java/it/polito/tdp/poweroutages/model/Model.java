@@ -48,7 +48,7 @@ public class Model {
 	 * @input Y è il numero massimo di ore di outage totali
 	 */
 	public void analysisWorstCase(List<PowerOutage> parziale) {
-		if(peopleAffected(parziale)>maxAffected && totHoursOutage(parziale).compareTo(hoursOutage)>0 &&totHoursOutage(parziale).compareTo(maxOre)<0)  {
+		if(peopleAffected(parziale)>maxAffected && totHoursOutage(parziale).compareTo(hoursOutage)>0)  {
 			maxAffected=peopleAffected(parziale);
 			hoursOutage=totHoursOutage(parziale);
 			soluzione=new LinkedList<PowerOutage>(parziale);
